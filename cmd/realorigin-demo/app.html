@@ -1,0 +1,84 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>realorigin demo</title>
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; height: 100%; background: #10131a; color: #d3d7cf;
+               font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { display: flex; flex-direction: column; }
+  header { flex: 0 0 auto; padding: 10px 14px; background: #171b24;
+           border-bottom: 1px solid #262b34; display: flex; gap: 10px; align-items: center; }
+  input { flex: 1 1 auto; padding: 7px 10px; border-radius: 5px; border: 1px solid #2b3163;
+          background: #0d0f18; color: #d3d7cf; font: inherit; min-width: 12rem; }
+  button { padding: 7px 14px; border-radius: 5px; border: 1px solid #2b3163;
+           background: #1c2138; color: #c7cbe6; font: inherit; cursor: pointer; }
+  button:hover { background: #242a47; }
+  #note { padding: 6px 14px; font-size: 12px; color: #6f759c; background: #141822;
+          border-bottom: 1px solid #262b34; }
+  iframe { flex: 1 1 auto; width: 100%; border: 0; background: #fff; }
+</style>
+
+<header>
+  <strong>realorigin</strong>
+  <input id="url" value="https://example.com" spellcheck="false" aria-label="URL to open">
+  <button id="go">Open</button>
+</header>
+<div id="note">The frame below is a different origin from this page. It has no
+  credentials and cannot name a target — it only supplies a path.</div>
+<iframe id="frame" title="browsed content"></iframe>
+
+<script src="/responder.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var SUFFIX = window.__DEMO.suffix;      // e.g. ".demo.localhost"
+  var BROWSE_PORT = window.__DEMO.browsePort;
+
+  // The transport. This is the whole of what an embedder implements: given the
+  // target that was registered and a request, return a response. Here it goes
+  // out through this app's own server, which is a thing the browser could not do
+  // from the browse origin — no CORS, no credentials exposed to the content.
+  //
+  // A real deployment substitutes its own network here: a mesh, an onion route,
+  // a peer-to-peer fetch, a decrypted archive.
+  function transport(target, req) {
+    var path = '/';
+    try { var u = new URL(req.url); path = u.pathname + u.search; } catch (e) {}
+    var abs = target.replace(/\/+$/, '') + path;
+    realOrigin.progress('fetching ' + abs);
+    return fetch('/via?url=' + encodeURIComponent(abs), {
+      method: req.method || 'GET',
+      headers: { 'x-ro-forward': JSON.stringify(req.headers || {}) },
+      body: (req.method && req.method !== 'GET' && req.method !== 'HEAD') ? req.body : undefined,
+    }).then(function (r) {
+      var headers = {};
+      r.headers.forEach(function (v, k) { headers[k] = v; });
+      return r.arrayBuffer().then(function (body) {
+        return { status: r.status, headers: headers, body: body };
+      });
+    });
+  }
+
+  realOrigin.configure({ suffix: SUFFIX, fetch: transport });
+
+  function open(target) {
+    // Registering returns the content-addressed id; the frame is then pointed at
+    // that origin and works out its own id from its hostname.
+    realOrigin.register(target).then(function (id) {
+      var origin = location.protocol + '//' + id + SUFFIX + ':' + BROWSE_PORT;
+      document.getElementById('frame').src = origin + '/';
+    });
+  }
+
+  document.getElementById('go').addEventListener('click', function () {
+    open(document.getElementById('url').value.trim());
+  });
+  document.getElementById('url').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { open(e.target.value.trim()); }
+  });
+
+  open(document.getElementById('url').value);
+})();
+</script>
