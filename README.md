@@ -160,7 +160,7 @@ Nothing here is specific to that: the transport was always behind an interface,
 because the service worker runs on the untrusted origin and must not know what
 the credential is for.
 
-## Licence
+## License
 
 MIT.
 
