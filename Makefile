@@ -39,7 +39,7 @@ test-wasm: ## Compile-gate the js/wasm-tagged half
 	@# A BUILD, not a test run: a package can support js/wasm while its tests
 	@# do not — bbolt's unix_test.go needs unix.Rlimit, which does not exist
 	@# there. Compiling is what catches the error this target exists for.
-	@if ! grep -rlq '^//go:build js' --include='*.go' . 2>/dev/null; then \
+	@if ! grep -rlq '^//go:build js' --include='*.go' --exclude-dir=vendor . 2>/dev/null; then \
 		echo 'no js/wasm-tagged files; nothing to gate'; \
 	else \
 		echo '--- building in the js/wasm build context'; \
