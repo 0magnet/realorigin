@@ -33,7 +33,7 @@ import (
 
 	_ "embed"
 
-	cc "github.com/0magnet/coloredcobra"
+	"github.com/0magnet/calvin/clihelp"
 	"github.com/spf13/cobra"
 
 	"github.com/0magnet/realorigin"
@@ -71,18 +71,7 @@ func init() {
 }
 
 func main() {
-	cc.Init(&cc.Config{
-		RootCmd:         rootCmd,
-		Headings:        cc.HiBlue + cc.Bold,
-		Commands:        cc.HiBlue + cc.Bold,
-		CmdShortDescr:   cc.HiBlue,
-		Example:         cc.HiBlue + cc.Italic,
-		ExecName:        cc.HiBlue + cc.Bold,
-		Flags:           cc.HiBlue + cc.Bold,
-		FlagsDescr:      cc.HiBlue,
-		NoExtraNewlines: true,
-		NoBottomNewline: true,
-	})
+	clihelp.Init(rootCmd, "realorigin", true)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, "realorigin-demo:", err) //nolint:errcheck // nowhere left to report it
 		os.Exit(1)

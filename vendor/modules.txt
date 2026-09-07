@@ -1,15 +1,10 @@
-# github.com/0magnet/coloredcobra v1.0.3
+# github.com/0magnet/calvin v0.0.0-20260907211102-35b15c690884
 ## explicit; go 1.25.0
-github.com/0magnet/coloredcobra
-# github.com/fatih/color v1.19.0
-## explicit; go 1.25.0
-github.com/fatih/color
+github.com/0magnet/calvin
+github.com/0magnet/calvin/clihelp
 # github.com/inconshreveable/mousetrap v1.1.0
 ## explicit; go 1.18
 github.com/inconshreveable/mousetrap
-# github.com/mattn/go-colorable v0.1.15
-## explicit; go 1.18
-github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.24
 ## explicit; go 1.20
 github.com/mattn/go-isatty
@@ -22,4 +17,3 @@ github.com/spf13/pflag
 # golang.org/x/sys v0.47.0
 ## explicit; go 1.25.0
 golang.org/x/sys/unix
-golang.org/x/sys/windows
