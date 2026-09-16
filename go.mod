@@ -3,7 +3,7 @@ module github.com/0magnet/realorigin
 go 1.26.0
 
 require (
-	github.com/0magnet/calvin v0.0.0-20260913215348-2de0c1f412b3
+	github.com/0magnet/calvin v0.0.0-20260915170035-09af7075474e
 	github.com/spf13/cobra v1.10.2
 )
 
