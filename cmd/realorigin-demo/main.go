@@ -71,7 +71,7 @@ func init() {
 }
 
 func main() {
-	clihelp.Init(rootCmd, "realorigin", true)
+	clihelp.Init(rootCmd, "realorigin")
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, "realorigin-demo:", err) //nolint:errcheck // nowhere left to report it
 		os.Exit(1)
