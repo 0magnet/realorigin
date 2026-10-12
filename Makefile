@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help format tidy lint vet test test-wasm test-browser cover check install-linters demo
+.PHONY: help format tidy lint vet test test-wasm test-browser cover check install-linters demo docs
 
 # The targets that matter are `format` and `check`, and they mean the same
 # thing here as in 0pcom/skywire, which is the reference for these repos.
@@ -182,3 +182,6 @@ install-linters: ## Install the linters
 
 demo: ## Run the demo on localhost:7999
 	go run ./cmd/realorigin-demo
+
+docs: ## Regenerate the dependency graph and code counts in the README
+	./gendocs.sh
